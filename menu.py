@@ -1,12 +1,10 @@
 import os
 import re
+import sys
 
 
 # 路径解析
 # 路径字符串，当前工作目录，家目录home，用户名
-import sys
-
-
 def path_resolve(path, cur_directory, home, user):
     absolute = False
     # 绝对路径

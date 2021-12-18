@@ -98,6 +98,15 @@ class File:
         s = ''.join(content_list)
         self.length = len(s)   # 更新文件长度
 
+        # 将磁盘装入文件的位置清空
+        for i in index:
+            if i == -1:
+                break
+            else:
+                r = i // disk.col
+                c = i % disk.col
+                disk.disk_content[r][c] = ""
+                disk.bitmap[r][c] = 0
         # 写入磁盘
         p = 0      # 指向字符串的指针
         i = 0      # 指向index的指针
@@ -174,10 +183,14 @@ class Directory:
         length = len(self.directory)
         for i in range(length):  # 寻找该文件夹
             if self.directory[i].directory_name == dire:
-                self.directory.pop(i)
-                print("目录删除成功！")
+                t = self.directory.pop(i)
+                # 删除文件夹中的所有文件
+                for j in range(len(t.file)):
+                    t.remove_file(t.file[j].file_name)
+                # 删除文件夹里的文件夹
+                for j in range(len(t.directory)):
+                    t.remove_directory(t.directory[j].name)
                 return
-
         print("不能删除目录" + dire + ": 文件夹不存在")
 
     def remove_file(self, fl, disk):  # rm XXX命令：删除文件：文件夹名称
